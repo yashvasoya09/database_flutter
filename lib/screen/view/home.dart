@@ -1,4 +1,5 @@
 import 'package:database_flutter/screen/controller/DB_controller.dart';
+import 'package:database_flutter/utills/db_helper_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,8 +14,7 @@ class home extends StatefulWidget {
 DB_controller db_controller = Get.put(DB_controller());
 Map<String, double> dataMap = {
 
-  "expense ":db_controller.expence,"income":db_controller.income
-};
+  "expense ": double.parse("${db_controller.expence.value}"),"income": double.parse("${db_controller.income.value}")};
 class _homeState extends State<home> {
   @override
   void initState() {
@@ -22,6 +22,7 @@ class _homeState extends State<home> {
     db_controller.check();
   }
   Widget build(BuildContext context) {
+    DB_Helper_2 db_helper =DB_Helper_2();
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -32,7 +33,8 @@ class _homeState extends State<home> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: IconButton(onPressed: () {Get.toNamed('add');
+            child: IconButton(onPressed: () {
+              Get.toNamed("add");
             },icon: Icon(CupertinoIcons.add,color: Colors.black)),
           ),
         ],),
@@ -95,15 +97,18 @@ class _homeState extends State<home> {
                 // emptyColorGradient: ---Empty Color gradient---
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("You Save ${db_controller.total}",style: GoogleFonts.play(color: Colors.green,fontSize: 25)),
-                ),
-              ],
-            ),
+    //         Row(
+    //           mainAxisAlignment: MainAxisAlignment.end,
+    //           children: [
+    //            db_controller.total<0? Padding(
+    //         padding: const EdgeInsets.all(8.0),
+    //   child: Obx(() =>  Text("You Lose ${db_controller.total}",style: GoogleFonts.play(color: Colors.red,fontSize: 25))),
+    // ): Padding(
+    //               padding: const EdgeInsets.all(8.0),
+    //               child: Obx(() =>  Text("You Save ${db_controller.total}",style: GoogleFonts.play(color: Colors.green,fontSize: 25))),
+    //             ),
+    //           ],
+    //         ),
                         SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -116,6 +121,13 @@ class _homeState extends State<home> {
                 ],
               ),
             ),
+            FutureBuilder(builder: (context, snapshot) {
+              if(snapshot.hasData)
+                {
+                  return Text("${snapshot.hasData as String}");
+                }
+              return CircularProgressIndicator();
+            },future: db_helper.readDB()),
             Expanded(
               child: ListView.builder(itemBuilder: (context, index) {
                 return Padding(

@@ -7,8 +7,9 @@ void main() {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      initialRoute: "home",
       routes: {
-        "/":(context) => home(),
+        "home":(context) => home(),
         "add":(context) => addScreen(),
       },
     ),
